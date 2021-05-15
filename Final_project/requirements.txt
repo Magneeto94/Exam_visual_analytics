@@ -1,0 +1,8 @@
+pandas
+wget
+numpy
+opencv-python
+Path
+matplotlib
+sklearn
+tensorflow
