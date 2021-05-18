@@ -29,7 +29,7 @@ def main():
     width = image.shape[1] #Index 1 is the width of an image.
     
     
-    # Setting the points for cropped image. Found again by trying different coordinates on the in the pictures.
+    # Setting the points for cropped image. Found by trying different coordinates on the in the pictures.
     left = width//4
     top = height//4
     right = (width//4)*3

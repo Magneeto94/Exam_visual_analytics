@@ -6,3 +6,4 @@ Path
 matplotlib
 sklearn
 tensorflow
+pydot

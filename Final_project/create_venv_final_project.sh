@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VENVNAME=venv_ass3
+VENVNAME=venv_FP
 
 python3 -m venv $VENVNAME
 source $VENVNAME/bin/activate
