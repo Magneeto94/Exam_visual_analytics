@@ -11,6 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path #Importing Path that we are going to acces our files with.
 import csv
+import pandas as pd
+import argparse
 
 
 '''
@@ -18,21 +20,49 @@ import csv
 
 '''
 def main():
+    
+    
+    ap = argparse.ArgumentParser(description = "[INFO] creating benchmark classifier")
+    
+    #The script takes the target image as an argument.
+    ap.add_argument("-TI", #flag
+                    "--target_image", 
+                    required=False, # You do not need to give any arguments, but you can.
+                    # If no argument is given, the script will be run with image_0006 as the target image.
+                    default="image_0006.jpg",
+                    type=str,
+                    help="Type in the name of the image you would like to compare with.")
+    
+    
+    args = vars(ap.parse_args())
+    
+    #Putting the argument into a variable and making sure it is a string
+    input_image_name = str(args["target_image"])
+    
 
+    
+    
+    
+    
     #writing the data path to where the flower pictures are.
     data_path = os.path.join("..", "data", "17flowers", "jpg")
 
     #writing the path to where the csv-file endproduckt
-    outpath = os.path.join("..", "output", "distance.csv")
+    outpath = os.path.join("..", "output", "temporary.csv")
 
 
     #Creating containers for the picture data.
     results = []
     new_results = ["Filename", "Distance"]
 
-    #Choosing a target image and writing the path to it.
-    target_image = cv2.imread(os.path.join("..", "data", "17flowers", "jpg", "image_0006.jpg"))
+    
+    
+    
+    # The path to the target image, based on the input of the user.
+    target_image = cv2.imread(os.path.join("..", "data", "17flowers", "jpg", input_image_name))
 
+    
+    
     #Creating a histogram from the picture
     target_image_hist = cv2.calcHist([target_image], [0,1,2], None, [8,8,8], [0,256, 0,256, 0,256])
 
@@ -97,9 +127,20 @@ def main():
         #Also appending to the list new_results above
         new_results.append(result[22:len(result)])
     
+    #Reading the csv I have just created as a dataframe
+    distance_df = pd.read_csv("../output/temporary.csv")
+    
+    #Sorting the data acording to distance
+    distance_df = distance_df.sort_values(by=['Distance'])
+    
+    distance_df = distance_df.reset_index(drop=True)
+    
+    #Saving the sorted dataframe as a csv.
+    distance_df.to_csv("../output/distance.csv", sep=',')
+    
+    print(f"Printing the 10 most similar histograms to image {input_image_name}")
+    print(distance_df.head(10))
 
-    #Displaying the list.
-    #new_results
-
+          
 if __name__ =='__main__':
     main()

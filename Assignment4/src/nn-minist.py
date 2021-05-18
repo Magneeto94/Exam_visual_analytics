@@ -100,7 +100,7 @@ def main():
     # Fetching/downloading data set
     X, y = fetch_openml('mnist_784', version=1, return_X_y=True)
     
-    #X is the the images, y is the the category.
+    #X is the images, y is the the category.
     X = np.array(X)
     y = np.array(y)
     
@@ -135,6 +135,12 @@ def main():
     predictions = nn.predict(X_test)
     predictions = predictions.argmax(axis=1)
     print(classification_report(y_test.argmax(axis=1), predictions))
+    
+    #Writing results to txt file.
+    txt_file = open("../output/nn_results.txt", "a")
+    txt_file.write(classification_report(y_test.argmax(axis=1), predictions))
+    txt_file.close()
+    
 
 if __name__ =='__main__':
     main()

@@ -91,7 +91,7 @@ def main():
     one_Genre_df = data[data.Genre.isin(unique_cathegories)]
 
     #Create data frame based on the genres we want to be included in the CNN
-    one_Genre_df = one_Genre_df[data.Genre.isin(["Comedy", "Documentary", "Horror", "Sci-Fi", "Western", "Animation"])]
+    one_Genre_df = one_Genre_df[data.Genre.isin(["Comedy", "Documentary", "Horror", "Sci-Fi", "Western", "Animation"])][:100]
     #Reset the index
     one_Genre_df = one_Genre_df.reset_index(drop=True)
     #Print the uniqe genres in the data frame, these will be our labels later on
@@ -210,8 +210,8 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(np_images, 
                                                         one_Genre_df["Genre"],
                                                         #The size is based on the genre with the lowest number of posters
-                                                        train_size = 4051,
-                                                        test_size = 1013)    
+                                                        #train_size = 4051,
+                                                        test_size = 0.25)    
 
     #Convert the data into arrays. We have to convert the lists into arrays again to avoid an error 
     X_train = np.array(X_train)
