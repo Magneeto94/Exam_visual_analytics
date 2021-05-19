@@ -44,6 +44,8 @@ def main():
 
     #Renaming all movies that have Animation in their title to just being "Animation"
     data["Genre"] = data["Genre"].replace(to_replace=r'^.*Animation(.*)', value='Animation', regex=True)
+    
+    #Same procedure as above with different data
     data["Genre"] = data["Genre"].replace(to_replace='Drama|Romance', value='Romance', regex=False)
     data["Genre"] = data["Genre"].replace(to_replace=r'^.*Western(.*)', value='Western', regex=True)
     data["Genre"] = data["Genre"].replace(to_replace=r'^.*Sci-Fi(.*)', value='Sci-Fi', regex=True)
@@ -72,8 +74,9 @@ def main():
     one_Genre_df = data[data.Genre.isin(unique_cathegories)]
     
     
-    
-    one_Genre_df = one_Genre_df[data.Genre.isin(["Horror", "Western", "Animation"])]
+
+
+    one_Genre_df = one_Genre_df[data.Genre.isin(["Sci-Fi", "Documentary", "Animation", "Romance"])]
     one_Genre_df = one_Genre_df.reset_index()
     
     
@@ -94,7 +97,10 @@ def main():
     '''
     ------------------------DOWNLOADING IMAGES:----------------------
     '''
-    
+    ###
+    ###
+    ### POSTER_DATA2
+    ###
     try:
         os.mkdir(os.path.join("..", "data", "Poster_data"))
         print("Poster_data was created!")
@@ -107,6 +113,11 @@ def main():
     
         index = str(i)
         #Creating name of poster files
+        
+                    ###
+                    ###
+                    ### POSTER_DATA2
+                    ###
         filename = "../data/Poster_data/"+ str(one_Genre_df["Title"][i]) + ".jpg"
         print(filename)
     

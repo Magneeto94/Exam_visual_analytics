@@ -3,7 +3,8 @@
 '''
 # Libraries
 import pandas as pd
-import os
+import os, sys
+sys.path.append(os.path.join(".."))
 import wget
 import numpy as np
 import cv2
@@ -43,10 +44,10 @@ def main():
     
     
     #Load df
-    one_Genre_df = pd.read_csv("output/sorted_genre_df.csv")
+    one_Genre_df = pd.read_csv("../data/sorted_df.csv")
 
     #Define the image path
-    image_path = os.path.join("data/Sorted_Posters")
+    image_path = os.path.join("../data/Poster_data")
 
     #Create empty list, where the arrays will be storred
     np_images = []
@@ -66,8 +67,7 @@ def main():
 
     X_train, X_test, y_train, y_test = train_test_split(np_images, 
                                                         one_Genre_df["Genre"], 
-                                                        train_size = 4051,
-                                                        test_size = 1013) 
+                                                        test_size = 0.25) 
     '''
     -------------- Define model:---------------
     '''                                                    
@@ -76,15 +76,15 @@ def main():
     def nn_model(optimizer='sgd'):
         # create a sequential model
         model = Sequential()
-        # add input layer of nodes and hidden layer of 32, ReLU activation
-        model.add(Conv2D(32,(3, 3), input_shape=(268, 182, 3,), activation="relu"))
         # add input layer of nodes and hidden layer of 16, ReLU activation
-        model.add(Conv2D(16, (5, 5), activation="relu"))
+        model.add(Conv2D(16,(3, 3), input_shape=(268, 182, 3,), activation="relu"))
+        # add input layer of nodes and hidden layer of 32, ReLU activation
+        model.add(Conv2D(32, (5, 5), activation="relu"))
         model.add(Flatten())
         # hidden layer of 6 nodes, ReLU activation
         model.add(Dense(6, activation="relu"))
-        # classificaiton layer, 6 classes with softmax activation
-        model.add(Dense(6, activation="softmax")) 
+        # classificaiton layer, 3 classes with softmax activation
+        model.add(Dense(3, activation="softmax")) 
         # categorical cross-entropy, optimizer defined in function call
         model.compile(loss="categorical_crossentropy", 
                       optimizer=optimizer, 

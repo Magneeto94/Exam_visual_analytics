@@ -1,0 +1,10 @@
+              precision    recall  f1-score   support
+
+   Animation       0.52      0.61      0.56       391
+     Romance       0.43      0.40      0.41       373
+      Sci-Fi       0.48      0.37      0.42       338
+ Documentary       0.42      0.45      0.44       451
+
+    accuracy                           0.46      1553
+   macro avg       0.46      0.46      0.46      1553
+weighted avg       0.46      0.46      0.46      1553

@@ -71,16 +71,16 @@ def main():
                                                         train_size=train_s, 
                                                         test_size=test_s)
     
-    #Normalizing the data by deviding it by 255
+    #Normalizing the data by deviding it by 255.0
     X_train_scaled = X_train/255.0
     X_test_scaled = X_test/255.0
     
     
     
-    clf = LogisticRegression(penalty='none', 
-                         tol=0.1, 
-                         solver='saga',
-                         multi_class='multinomial').fit(X_train_scaled, y_train)
+    clf = LogisticRegression(penalty='none', #no regularization is applied
+                         tol=0.1, #The tolerance for stopping criteria.
+                         solver='saga', #Algorithem for optimasation problem. We use 'saga' as this algorithm handels multinominal loss
+                         multi_class='multinomial').fit(X_train_scaled, y_train) #We select multinomenal as our data is not binary
     
     
     y_pred = clf.predict(X_test_scaled)

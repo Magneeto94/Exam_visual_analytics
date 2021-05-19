@@ -35,7 +35,7 @@ from tensorflow.keras import backend as K
 -------------- Main function:---------------
 '''
 
-#Define function for plotting and save history 
+#Function for plotting and saving history
 def plot_history(H, epochs):
     # Visualize performance
     plt.style.use("fivethirtyeight")
@@ -51,18 +51,19 @@ def plot_history(H, epochs):
     plt.tight_layout()
     plt.show()
     #Save the history as model_performance.png
-    fig.savefig("../output/model_performance.png")
+    fig.savefig("../output/CNN_model_performance.png")
 
 
 def main():
     
-    
+    #Define path to data frame created in the data_cleaning.py script.
     df_path = os.path.join("..", "data", "sorted_df.csv")
     
+    #Reading the dataframe
     sorted_df = pd.read_csv(df_path)
     
     
-    #Iterating through the unique cathegories.
+    #Iterating through the unique cathegories, to create a list genres
     cathegories = []
     for cat in sorted_df["Genre"].unique():
     
@@ -75,44 +76,47 @@ def main():
     
     
     
-    #Define the image path
+    #Defining path to poster images
     image_path = os.path.join("..", "data", "Poster_data")
 
-    #Create empty list, where the arrays will be storred
+    #Creating an empty data frame, where the arrays will be storred.
     np_images = pd.DataFrame(columns=["Title", "np_array"])
 
-    #Convert every image in the image_path to numpy arrays
+    #Convert every image to np arrays.
     for image in Path(image_path).glob("*jpg"):
+        #Reading image with cv2.
         image_array = cv2.imread(str(image)) 
 
-    
+                                      #Appending title and np array to the dataframe np_images
         np_images = np_images.append({'Title' : str(image)[20:len(str(image))-4],
-                                      'np_array' : image_array}, 
+                                      'np_array' : image_array},
                                        ignore_index=True)
     
     
     
-    #Sorting np-dataframe alphabetical
+    #Sorting np_images in alphabetical order
     sorted_np_images_df = np_images.sort_values(by=['Title']).reset_index(drop=True)
     
     
-    #Sorting "original" df alphabetical
+    #Sorting sorted_df in alphabetical order.
     alpha_df = sorted_df.sort_values(by=['Title']).reset_index(drop=True)
     
     
     
-    #Merging the 2 dataframes by title
+    #Merging the 2 dataframes by "Title"
     merged_df = pd.merge(alpha_df, sorted_np_images_df, on="Title")
     
     
     
-    #Dropping duplicates in the merged dataset.
+    #Removing duplicates and resetting index in merged_df.
     merged_df = merged_df.drop_duplicates(subset=['Title']).reset_index(drop=True)
     
     
-    
-    #Taking the arrays from the datafram and putting them into a list again.
-    #The model does not work, when np_arrays come from a dataframe
+    '''
+    We are now making the np_array series in the merged_df into a list.
+    It is transformed because the CNN model that we train later in the script
+    does not run if the X_train and X_test comes from a dataframe
+    '''
     np_list = merged_df["np_array"].to_list()
     
     
@@ -120,11 +124,12 @@ def main():
     '''
     ----------------DEFINING TRAINING AND TEST LABELS AND DATA:--------------
     '''
-    
+
     X_train, X_test, y_train, y_test = train_test_split(np_list, 
                                                         merged_df["Genre"],
-                                                        test_size= 0.25,
-                                                        random_state= 9)
+                                                        test_size= 0.25)
+
+
     
     X_train = np.array(X_train)
     X_test = np.array(X_test)
@@ -147,8 +152,8 @@ def main():
     model = Sequential()
     # First set of CONV => RELU => POOL
 
-    #EBT: filter is a mesure of how much the image is split up, and how many times the kernal runs through each image.
-    model.add(Conv2D(2, (3, 3),  #NB: the filter is set to the input 50 and the kernel to 3x3
+    #setting the filter is a mesure of how much the image is split up, and how many times the kernal runs through each image.
+    model.add(Conv2D(16, (3, 3),  #NB: the filter is set to the input 16 and the kernel to 3x3
                     padding="same", 
                     input_shape=(268, 182, 3))) #The shape of all the posters with height, width and dimensions
     model.add(Activation("relu"))
@@ -156,11 +161,12 @@ def main():
                            strides=(2, 2)))
 
     #Second set of CONV => RELU => POOL
-    model.add(Conv2D(4, (5, 5), #NB: the filter is set to 100 and the kernel to 3x3
+    model.add(Conv2D(4, (3, 3), #NB: the filter is set to 32 and the kernel to 3x3
                      padding="same"))
     model.add(Activation("relu"))
     model.add(AveragePooling2D(pool_size=(2, 2), strides=(2, 2)))
 
+    #Adding dropout layer
     model.add(Dropout(0.15))
     
     # FC => RELU
@@ -169,21 +175,21 @@ def main():
     model.add(Activation("relu"))
 
     # Softmax classifier
-    model.add(Dense(3))  #NB: the filter is set to 8 which is the number of unique labels
+    model.add(Dense(4))  #NB: the filter is set to 3 which is the number of unique labels
     model.add(Activation("softmax"))
 
     # Compile model
     opt = SGD(lr=0.01)
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
-    # Save model summary as model_architecture.png
-    plot_model(model, to_file = "../output/model_architecture.png", show_shapes=True, show_layer_names=True)
+    # Save model summary
+    plot_model(model, to_file = "../output/CNN_model_architecture.png", show_shapes=True, show_layer_names=True)
 
     # Train the model
     H = model.fit(X_train, y_train, 
                   validation_data=(X_test, y_test), 
                   batch_size=10,
-                  epochs=1, #NB: can be set as a paramenter
+                  epochs=10, #NB: can be set as a paramenter
                   verbose=1)
 
     #View the summary
@@ -191,13 +197,22 @@ def main():
     
     
     # Plot and save history via the earlier defined function
-    plot_history(H, 1) #NB: epochs(10) can be set as a paramenter
+    plot_history(H, 10) #NB: epochs(10) can be set as a paramenter
 
     # Print the classification report
     predictions = model.predict(X_test, batch_size=10)
     print(classification_report(y_test.argmax(axis=1),
                                 predictions.argmax(axis=1),
                                 target_names=cathegories))
+    
+
+    #Writing results to txt file.
+    txt_file = open("../output/CNN_classification_report.txt", "a")
+    txt_file.write(classification_report(y_test.argmax(axis=1),
+                                         predictions.argmax(axis=1),
+                                         target_names=cathegories))
+    txt_file.close()
+
     
 if __name__ == "__main__":
     main() 
