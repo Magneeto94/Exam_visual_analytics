@@ -136,7 +136,7 @@ def main():
     distance_df = distance_df.reset_index(drop=True)
     
     #Saving the sorted dataframe as a csv.
-    distance_df.to_csv("../output/distance.csv", sep=',')
+    distance_df.to_csv(os.path.join("..", "output", "distance.csv"), sep=',')
     
     print(f"Printing the 10 most similar histograms to image {input_image_name}")
     print(distance_df.head(10))
