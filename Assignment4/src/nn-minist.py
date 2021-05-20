@@ -26,12 +26,14 @@ def num_conv_layers(X_train, hidden_layer_1, hidden_layer_2, hidden_layer_3):
     if hidden_layer_1 > 0 and hidden_layer_2 == 0 and hidden_layer_3 == 0:
                
         print("[INFO] training network...")
+        #Training NeuralNetwork
         nn = NeuralNetwork([X_train.shape[1], hidden_layer_1, 10]) #CLI-argument
         
     #If two hidden layer is given
     elif hidden_layer_1 > 0 and hidden_layer_2 > 0 and hidden_layer_3 == 0:
         
         print("[INFO] training network...")
+        #Training NeuralNetwork
         nn = NeuralNetwork([X_train.shape[1], hidden_layer_1, hidden_layer_2, 10]) #CLI-argument
         
         
@@ -39,6 +41,7 @@ def num_conv_layers(X_train, hidden_layer_1, hidden_layer_2, hidden_layer_3):
     elif hidden_layer_1 > 0 and hidden_layer_2 > 0 and hidden_layer_3 > 0:
         
         print("[INFO] training network...")
+        #Training NeuralNetwork
         nn = NeuralNetwork([X_train.shape[1], hidden_layer_1, hidden_layer_2, hidden_layer_3, 10]) #CLI-argument
 
     return nn
@@ -104,6 +107,7 @@ def main():
     X = np.array(X)
     y = np.array(y)
     
+    
     X = (X - X.min())/(X.max() - X.min())
     
     
@@ -136,8 +140,11 @@ def main():
     predictions = predictions.argmax(axis=1)
     print(classification_report(y_test.argmax(axis=1), predictions))
     
+    #Defining path
+    txt_path = os.path.join("..", "output", "nn_results.txt")
+    
     #Writing results to txt file.
-    txt_file = open("../output/nn_results.txt", "a")
+    txt_file = open(txt_path, "a")
     txt_file.write(classification_report(y_test.argmax(axis=1), predictions))
     txt_file.close()
     

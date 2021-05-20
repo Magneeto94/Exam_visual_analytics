@@ -16,7 +16,7 @@ def main():
     '''
     ------------------Reading in image file:-------------------
     '''
-    fname = os.path.join("../data", "Jefferson_quote.jpg")
+    fname = os.path.join("..", "data", "Jefferson_quote.jpg")
     image = cv2.imread(fname)
     
     '''
@@ -42,7 +42,7 @@ def main():
     image = cv2.rectangle(image, (left,top), (right,bottom), (0, 255,0), 3)
     
     #saving image to output folder.
-    cv2.imwrite("../output/image_with_ROI.jpg", image) 
+    cv2.imwrite(os.path.join("..", "output", "image_with_ROI.jpg"), image)
 
 
 
@@ -55,13 +55,13 @@ def main():
     image = cv2.imread(fname)
 
     #Reading the image again.
-    im = Image.open(r"../data/Jefferson_quote.jpg")
+    im = Image.open(fname)
   
     # Cropped image of above dimension 
     im1 = im.crop((left, top, right, bottom)) 
 
     #Saving the cropped image, as it is in the wrong format, but if we reload it with the with cv2, it can be worked with again.
-    im1.save("../output/image_cropped.jpg")
+    im1.save(os.path.join("..", "output", "image_cropped.jpg"))
 
 
 
@@ -70,7 +70,7 @@ def main():
     '''
 
     #Reading the cropped file.
-    crop_file = os.path.join("../output/image_cropped.jpg")
+    crop_file = os.path.join("..", "output", "image_cropped.jpg")
     crop_image = cv2.imread(crop_file)
 
 
@@ -117,7 +117,7 @@ def main():
            
 
     #Saving image
-    cv2.imwrite("../output/image_letters.jpg", image_contours)
+    cv2.imwrite(os.path.join("..", "output", "image_letters.jpg"), image_contours)
     
     
 if __name__=="__main__":

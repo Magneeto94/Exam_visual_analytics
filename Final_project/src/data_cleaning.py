@@ -51,7 +51,7 @@ def main():
     data["Genre"] = data["Genre"].replace(to_replace=r'^.*Sci-Fi(.*)', value='Sci-Fi', regex=True)
     data["Genre"] = data["Genre"].replace(to_replace=r'^.*Horror(.*)', value='Horror', regex=True)
 
-    #Getting all unique cathegories from the dataset:
+    #Getting all unique Genres/cathegories from the dataset:
     unique_data = data.Genre.unique()
 
 
@@ -59,15 +59,14 @@ def main():
     unique_cathegories = []
     for cat in unique_data:
     
-        #We find the Genres, that is only described by cathegory
-        # "|" indicate that the movie has more than one genre.
+        #We find the Genres, that is only described by one cathegory
+        #an "|" indicates that the movie has more than one genre.
         if "|" not in str(cat):
+            #if the genre/cathegory does not have an "|" in the string it is appended into unique_cathegories.
             unique_cathegories.append(cat)
 
 
-    # If we want to use the movie title
-    # Title
-    # Replace the whitespaces in the titles with a underscore
+    # Replacing the whitespaces in the titles with an underscore, to easier work with the data when it is in folders.
     data["Title"] = data["Title"].str.replace(pat=" ", repl="_")
     
     
@@ -75,8 +74,9 @@ def main():
     
     
 
-
+    #Chosing which genre we want in the dataset
     one_Genre_df = one_Genre_df[data.Genre.isin(["Sci-Fi", "Documentary", "Animation", "Romance"])]
+    #Resetting index
     one_Genre_df = one_Genre_df.reset_index()
     
     
@@ -90,17 +90,14 @@ def main():
         if "|" not in str(cat):
             cathegories.append(cat)
 
-    print(f"The cathegories in the data set: {cathegories}")
+    print(f"\n The cathegories in the data set: {cathegories}")
     
     
     
     '''
     ------------------------DOWNLOADING IMAGES:----------------------
     '''
-    ###
-    ###
-    ### POSTER_DATA2
-    ###
+    
     try:
         os.mkdir(os.path.join("..", "data", "Poster_data"))
         print("Poster_data was created!")
@@ -113,11 +110,6 @@ def main():
     
         index = str(i)
         #Creating name of poster files
-        
-                    ###
-                    ###
-                    ### POSTER_DATA2
-                    ###
         filename = "../data/Poster_data/"+ str(one_Genre_df["Title"][i]) + ".jpg"
         print(filename)
     
@@ -134,7 +126,7 @@ def main():
             errors.append(int(index))
             pass
     
-    
+    #Dropping data where no poster was found and resetting index of the dataframe
     sorted_df = one_Genre_df.drop(labels=errors, axis=0).reset_index(drop=True)
     
     #Write to csv-file

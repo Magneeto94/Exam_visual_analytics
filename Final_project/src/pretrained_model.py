@@ -52,7 +52,7 @@ def plot_history(H, epochs):
     plt.tight_layout()
     plt.show()
     #Save the history as model_performance.png
-    fig.savefig("../output/pretrained_model_performance.png")
+    fig.savefig(os.path.join("..", "output", "pretrained_model_performance.png"))
     
     
     
@@ -195,7 +195,8 @@ def main():
     
 
     # Save model summary
-    plot_model(model, to_file = "../output/pretrained_model_architecture.png", show_shapes=True, show_layer_names=True)
+    model_path = os.path.join("..", "output", "pretrained_model_architecture.png")
+    plot_model(model, to_file = model_path, show_shapes=True, show_layer_names=True)
 
     
     H = model.fit(X_train, y_train, 
@@ -221,8 +222,11 @@ def main():
     
     
     
+    #Defining path to output text
+    txt_path = os.path.join("..", "output", "pretrained_classification_report.txt")
+    
     #Writing results to txt file.
-    txt_file = open("../output/pretrained_classification_report.txt", "a")
+    txt_file = open(txt_path, "a")
     txt_file.write(classification_report(y_test.argmax(axis=1),
                                          predictions.argmax(axis=1),
                                          target_names=cathegories))

@@ -51,7 +51,7 @@ def plot_history(H, epochs):
     plt.tight_layout()
     plt.show()
     #Save the history as model_performance.png
-    fig.savefig("../output/CNN_model_performance.png")
+    fig.savefig(os.path.join("..", "output", "CNN_model_performance.png"))
 
 
 def main():
@@ -182,9 +182,12 @@ def main():
     opt = SGD(lr=0.01)
     model.compile(loss="categorical_crossentropy", optimizer=opt, metrics=["accuracy"])
 
+    
     # Save model summary
-    plot_model(model, to_file = "../output/CNN_model_architecture.png", show_shapes=True, show_layer_names=True)
+    model_path = os.path.join("..", "output", "CNN_model_architecture.png")
+    plot_model(model, to_file = model_path, show_shapes=True, show_layer_names=True)
 
+    
     # Train the model
     H = model.fit(X_train, y_train, 
                   validation_data=(X_test, y_test), 
@@ -205,9 +208,11 @@ def main():
                                 predictions.argmax(axis=1),
                                 target_names=cathegories))
     
-
+    #Defining path to output text
+    txt_path = os.path.join("..", "output", "CNN_classification_report.txt")
+    
     #Writing results to txt file.
-    txt_file = open("../output/CNN_classification_report.txt", "a")
+    txt_file = open(txt_path, "a")
     txt_file.write(classification_report(y_test.argmax(axis=1),
                                          predictions.argmax(axis=1),
                                          target_names=cathegories))

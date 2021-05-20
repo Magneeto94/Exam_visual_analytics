@@ -94,6 +94,8 @@ def main():
     cm = metrics.classification_report(y_test, y_pred)
     print(cm)
     
+    txt_path = os.path.join("..", "output", "lr_results.txt")
+    
     #Writing results to txt file.
     txt_file = open("../output/lr_results.txt", "a")
     txt_file.write(cm)

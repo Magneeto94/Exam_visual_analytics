@@ -59,7 +59,7 @@ def main():
     
     
     # The path to the target image, based on the input of the user.
-    target_image = cv2.imread(os.path.join("..", "data", "17flowers", "jpg", input_image_name))
+    target_image = cv2.imread(os.path.join(data_path, input_image_name))
 
     
     
